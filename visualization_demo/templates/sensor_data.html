@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+    <header>
+        {% include 'header_includes.html' %}
+        {% include 'plotly_include.html' %}
+        <script src={{ url_for("static", filename="js/sensor_data.js") }}></script>
+    </header>
+    <body onload="draw()">
+        <div class="container">
+            <h1>Sensor Data</h1>
+            <div id="sensor_data_chart">
+            </div>
+        </div>
+    </body>
+</html>
