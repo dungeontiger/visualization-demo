@@ -28,4 +28,6 @@ dimensionBar controls ids need to match the column in the query they are showing
 
 onLoad
 
+code assumes all levels of a dimension are strings
+
 This is not perfect good but is good enough.  They are many different ways to accomplish the features shown in this demo.  This is meant to show how quick and easy it is,not architectural or code elegance

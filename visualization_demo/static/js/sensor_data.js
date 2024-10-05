@@ -1,12 +1,14 @@
 function onLoad() {
-    drawChart()
+    drawChart(null, false)
 }
 
-function drawChart(filters) {
+function drawChart(filters, update) {
     // get the data from the server and filter if necessary
     url = "/api/sensor_data?"
     if (filters) {
-        console.log(filters)
+        for (column in filters) {
+            url += column + "=" + filters[column] + "&"
+        }
     }
     fetch(url)
       .then(response => {
@@ -16,14 +18,14 @@ function drawChart(filters) {
         return response.json();
       })
       .then(data => {
-        renderChart(data);
+        renderChart(data, update);
       })
       .catch(error => {
         console.error('Error:', error);
       });
 }
 
-function renderChart(data) {
+function renderChart(data, update) {
     // data is an array of arrays
     // group_id, worldsensing_node_id, channel, initial_exceedance, start_at, end_at,
     // lower_threshold, upper_threshold, direction, exceeds_upper, exceeds_lower
@@ -39,18 +41,21 @@ function renderChart(data) {
     const exceeds_upper = data.map(row => row[8]);
     const exceeds_lower = data.map(row => row[9]);
 
-      // draw a dimension bar
-    // dimension bars are a list of drop downs that cascade
-    // a selection in the first one filters the next one
-    // drop downs are disabled when the one before them has selected "[all]" (meaning no filter)
+    // if we are updating the page, don't redraw the dimension bar; it takes care of itself
+    if (!update) {
+        // draw a dimension bar
+        // dimension bars are a list of drop downs that cascade
+        // a selection in the first one filters the next one
+        // drop downs are disabled when the one before them has selected "[all]" (meaning no filter)
 
-    // list of drop downs (in order) with label fo the control and the column index in the data for its values
-    drop_downs = [
-        ["group_id", group_id],
-        ["worldsensing_node_id", worldsensing_node_id],
-        ["channel", channel]
-    ]
-    drawDimensionBar(drop_downs);
+        // list of drop downs (in order) with label fo the control and the column index in the data for its values
+        drop_downs = [
+            ["group_id", group_id],
+            ["worldsensing_node_id", worldsensing_node_id],
+            ["channel", channel]
+        ]
+        drawDimensionBar(drop_downs);
+    }
 
     var sensor_trace = {
         name: 'Initial Exceedance',

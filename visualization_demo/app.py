@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 from flask import Flask
 from flask import render_template
+from flask import request
 
 load_dotenv()
 
@@ -18,9 +19,16 @@ def sensor_data():
 
 @app.route("/api/sensor_data")
 def get_sensor_data():
+    # URL parameters are filters
+    where_clause = ""
+    if len(request.args) > 0:
+        where_clause = "WHERE "
+        for column in request.args:
+            where_clause += f"{column} = '{request.args[column]}' AND "
+        where_clause = where_clause[:-5]
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(f"""
 SELECT
     group_id,
     worldsensing_node_id,
@@ -34,17 +42,14 @@ SELECT
     initial_exceedance > upper_threshold as exceeds_upper,
     initial_exceedance < lower_threshold as exceeds_lower
 FROM 
-    sensor_data 
+    sensor_data
+{where_clause}
 ORDER BY 
     start_at
 """)
     results = cur.fetchall()
     return results
 
-# WHERE
-#     group_id = 'c66fa855-695a-4090-b6a6-bc048373b31d'
-#     and worldsensing_node_id = '67640'
-#     and channel = '0'
 
 def get_connection():
     return psycopg2.connect(database=os.environ["POSTGRES_DB"],

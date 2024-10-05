@@ -59,8 +59,8 @@ function valueChanged(id, dropDowns) {
             filters[cur.id] = cur.value
         }
     }
-//
-//    drawChart(filters)
+
+    drawChart(filters, true)
 }
 
 function addOptions(select, data) {
