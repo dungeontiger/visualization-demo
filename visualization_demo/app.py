@@ -12,24 +12,22 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route("/landing")
-def landing():
-    return render_template('landing.html')
-
 @app.route("/sensor_data")
 def sensor_data():
-    return render_template('sensor_data.html')
-
+    return render_template('sensor_data.html', )
 
 @app.route("/api/sensor_data")
 def get_sensor_data():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-SELECT 
+SELECT
+    group_id,
+    worldsensing_node_id,
+    channel,
     initial_exceedance, 
     to_char(start_at, 'YYYY-MM-DD HH24:MI:SS') as start_at, 
-    channel, 
+    to_char(end_at, 'YYYY-MM-DD HH24:MI:SS') as end_at, 
     lower_threshold, 
     upper_threshold, 
     direction,
@@ -42,6 +40,11 @@ ORDER BY
 """)
     results = cur.fetchall()
     return results
+
+# WHERE
+#     group_id = 'c66fa855-695a-4090-b6a6-bc048373b31d'
+#     and worldsensing_node_id = '67640'
+#     and channel = '0'
 
 def get_connection():
     return psycopg2.connect(database=os.environ["POSTGRES_DB"],

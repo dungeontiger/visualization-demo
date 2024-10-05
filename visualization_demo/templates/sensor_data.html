@@ -1,15 +1,44 @@
-<!doctype html>
-<html lang="en">
-    <header>
-        {% include 'header_includes.html' %}
-        {% include 'plotly_include.html' %}
-        <script src={{ url_for("static", filename="js/sensor_data.js") }}></script>
-    </header>
-    <body onload="draw()">
-        <div class="container">
+{% extends 'base.html' %}
+
+<!-- include the js files needed for this page -->
+{% block page_script %}
+<script src={{ url_for("static", filename="js/dimension_bar.js") }}></script>
+<script src={{ url_for("static", filename="js/sensor_data.js") }}></script>
+{% endblock %}
+
+<!-- define the title for this visualizaiton page -->
+{% block vis_title %}
             <h1>Sensor Data</h1>
-            <div id="sensor_data_chart">
-            </div>
-        </div>
-    </body>
-</html>
+{% endblock %}
+
+<!-- this page uses a dimension bar, define it here -->
+{% block dimension_bar %}
+<div class="container text-left" id="dimensionBar">
+  <div class="row">
+    <div class="col">
+        <label for="group_id" class="col-form-label">Group</label>
+        <select class="form-select" id="group_id">
+          <option selected value="[all]">[all]</option>
+        </select>
+    </div>
+    <div class="col">
+        <label for="worldsensing_node_id" class="col-form-label">World Sensing Node</label>
+        <select class="form-select" id="worldsensing_node_id" disabled>
+          <option selected value="[all]">[all]</option>
+        </select>
+    </div>
+    <div class="col">
+        <label for="channel" class="col-form-label">Channel</label>
+        <select class="form-select" id="channel" disabled>
+          <option selected value="[all]">[all]</option>
+        </select>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+<!-- container for the actual visualization here -->
+{% block vis %}
+            <div id="sensor_data_chart"></div>
+{% endblock %}
