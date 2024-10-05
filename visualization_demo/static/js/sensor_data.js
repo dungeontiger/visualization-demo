@@ -4,10 +4,11 @@ function onLoad() {
 
 function drawChart(filters) {
     // get the data from the server and filter if necessary
+    url = "/api/sensor_data?"
     if (filters) {
         console.log(filters)
     }
-    fetch("/api/sensor_data")
+    fetch(url)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
