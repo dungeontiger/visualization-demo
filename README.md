@@ -30,4 +30,7 @@ onLoad
 
 code assumes all levels of a dimension are strings
 
+the order of the dimension bar in the array must match the order in the ui
+this is used to know which to update when
+
 This is not perfect good but is good enough.  They are many different ways to accomplish the features shown in this demo.  This is meant to show how quick and easy it is,not architectural or code elegance
