@@ -49,7 +49,7 @@ function renderChart(data, update) {
         // drop downs are disabled when the one before them has selected "[all]" (meaning no filter)
 
         // list of drop downs (in order) with label fo the control and the column index in the data for its values
-        drop_downs = [
+        const drop_downs = [
             ["group_id", group_id],
             ["worldsensing_node_id", worldsensing_node_id],
             ["channel", channel]
@@ -57,43 +57,78 @@ function renderChart(data, update) {
         drawDimensionBar(drop_downs);
     }
 
-    var sensor_trace = {
-        name: 'Initial Exceedance',
-        x: start_at,
-        y: initial_exceedance,
-        mode: 'lines+markers',
-        type: 'scatter',
-    };
+    // Each series is going to be a single sensor
+    // A single sensor is defined as the unique combination of:
+       // group_id
+       // worldsensing_node_id
+       // channel
 
-    var lower_limit_trace = {
-        name: 'Lower Tolerance',
-        x: start_at,
-        y: lower_threshold,
-        mode: 'lines',
-        type: 'scatter',
-        line: {
-            color: "#bf3608"
+    let tracesMap = {} // map of sensor id to it's trace
+    let upperLimitTracesMap = {}
+    let lowerLimitTracesMap = {}
+    // go through all the data and split it into traces
+    for (let index in data) {
+        const row = data[index]
+        const id = row[0] + "." + row[1] + "." + row[2]
+        if (!(id in tracesMap)) {
+            tracesMap[id] = {
+                name: "Initial Exceedance",
+                x: [],
+                y: [],
+                mode: "lines+markers",
+                type: "scatter",
+                hovertemplate: "InitialExceedance: %{y:.2f}<br>Start: %{x}<br>Sensor: " + id
+            }
+            upperLimitTracesMap[id] = {
+                name: "Upper Tolerance",
+                x: [],
+                y: [],
+                mode: "lines",
+                line: {
+                    color: "#fc4103"
+                }
+            }
+            lowerLimitTracesMap[id] = {
+                name: "Lower Tolerance",
+                x: [],
+                y: [],
+                mode: "lines",
+                line: {
+                    color: "#bf3608"
+                }
+            }
         }
-    };
+        // this is the intial exceedance trace
+        let trace = tracesMap[id]
+        trace.x.push(row[4])
+        trace.y.push(row[3])
 
-    var upper_limit_trace = {
-        name: 'Upper Tolerance',
-        x: start_at,
-        y: upper_threshold,
-        mode: 'lines',
-        type: 'scatter',
-        line: {
-            color: "#fc4103",
-        }
-    };
+        // set up the upper and lower limit traces
+        let upper = upperLimitTracesMap[id]
+        upper.x.push(row[4])
+        upper.y.push(row[7])
 
-    var layout = {
+        let lower = lowerLimitTracesMap[id]
+        lower.x.push(row[4])
+        lower.y.push(row[6])
+    }
+
+    let layout = {
         showlegend: true,
         xaxis: {
             type: 'date',
             tickformat: '%Y-%m-%0d' // For more time formatting types, see: https://github.com/d3/d3-time-format/blob/master/README.md
         }
     }
+    let traces = []
+    for (let key in tracesMap) {
+        traces.push(tracesMap[key])
+    }
+    // only show the upper and lower bounds if there is just one trace
+    if (traces.length == 1) {
+        traces.push(upperLimitTracesMap[Object.keys(upperLimitTracesMap)[0]])
+        traces.push(lowerLimitTracesMap[Object.keys(lowerLimitTracesMap)[0]])
+    }
 
-    Plotly.newPlot("sensor_data_chart", [sensor_trace, upper_limit_trace, lower_limit_trace], layout);
+    Plotly.newPlot("sensor_data_chart", traces, layout);
 }

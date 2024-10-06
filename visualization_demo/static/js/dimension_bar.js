@@ -26,6 +26,7 @@ function valueChanged(id, dropDowns) {
             break;
         }
     }
+    // TODO: Bug when changing parent to a non-all value need to repopulate controls
     for (var i = 1; i < dropDowns.length; i++) {
         prev = document.getElementById(dropDowns[i - 1][0])
         cur = document.getElementById(dropDowns[i][0])
