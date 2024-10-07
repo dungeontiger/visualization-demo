@@ -1,6 +1,8 @@
+let g_dropDowns
 function drawDimensionBar(dropDowns) {
     // data contains all the data
     // drop_downs is a list of select id and an array of data for its values
+    g_dropDowns = dropDowns
     for (let index in dropDowns) {
         dropDown = dropDowns[index]
         select = document.getElementById(dropDown[0])
@@ -51,14 +53,7 @@ function valueChanged(id, dropDowns) {
     }
     // we need to update the chart with new data
     // for each control that is not [all] pass its value as a dictionary
-    filters = {}
-    for (var i = 0; i < dropDowns.length; i++) {
-        cur = document.getElementById(dropDowns[i][0])
-        if (cur.value != "[all]") {
-            filters[cur.id] = cur.value
-        }
-    }
-
+    filters = getDimensionFilters()
     drawChart(filters, true)
 }
 
@@ -75,4 +70,18 @@ function createOption(value) {
     option.text = value
     option.value = value
     return option
+}
+
+function getDimensionFilters() {
+    filters = null
+    for (var i = 0; i < g_dropDowns.length; i++) {
+        if (!filters) {
+            filters = {}
+        }
+        cur = document.getElementById(g_dropDowns[i][0])
+        if (cur.value != "[all]") {
+            filters[cur.id] = cur.value
+        }
+    }
+    return filters
 }

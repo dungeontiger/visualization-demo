@@ -9,8 +9,11 @@
 
 
 <body onload="onLoad()">
-<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">Nanometrics</a>
+<header class="navbar sticky-top flex-md-nowrap p-0 shadow" style="background-color:#02426A">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">
+    <img src={{ url_for("static", filename="images/Favicon-wh.png") }} width="30" height="24" class="d-inline-block align-text-top">
+    Nanometrics
+  </a>
 </header>
 
 <div class="container-fluid">
@@ -59,18 +62,18 @@
           <h6>Filters</h6>
           <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="#">
-                Most Recent n Days
+              <a class="nav-link d-flex align-items-center gap-2" style="cursor:pointer" onclick="showMostRecentDaysDialog()">
+                Most Recent Days <span id="recentDaysFilterValue">([all])</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="#">
-                Single Day
+              <a class="nav-link d-flex align-items-center gap-2" href="javascript:showSingleDayDialog()">
+                Single Day <span id="singleDateFilterValue">([all])</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="#">
-                Date Range
+              <a class="nav-link d-flex align-items-center gap-2" href="#dateRangeModal" data-bs-toggle="modal" data-bs-target="#dateRangeModal">
+                Date Range <span id="dateRangeFilterValue">([all])</span>
               </a>
             </li>
           </ul>
@@ -93,6 +96,10 @@
       </div>
     </div>
 
+    <script>
+      updateDateFilterText()
+    </script>
+
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         {% block vis_title %}<h1 class="h2">Visualizations</h1>{% endblock %}
@@ -103,5 +110,84 @@
 
   </div>
 </div>
+<!-- dialogs -->
+
+<div class="modal fade" id="recentDaysModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Most Recent Days</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="mostRecentDays" class="form-label">Select the Number of Days</label>
+          <select class="form-select" id="mostRecentDays">
+            <option selected value="[all]">[all]</option>
+            <option value="1">Last Day</option>
+            <option value="7">Last 7 Days</option>
+            <option value ="30">Last 30 Days</option>
+          </select>
+          <div class="form-text">
+            This will filter the data to show only the last number of dates in the data. It does not filter by the current date.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveRecentDays()" data-bs-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="singleDayModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="singleDayModalLabel">Select a Day</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="form-text">
+            <label for="singleDayValue">Date</label>
+            <input class="form-control" type="date" id="singleDayValue"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveSingleDate()" data-bs-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="dateRangeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dateRangeLabel">Select a Date Range</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="form-text">
+            <label for="startDateValue">Start Date</label>
+            <input class="form-control" type="date" id="startDateValue"/>
+            <label for="endDateValue">End Date</label>
+            <input class="form-control" type="date" id="endDateValue"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveDateRange()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

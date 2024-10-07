@@ -3,6 +3,7 @@
 <!-- include the js files needed for this page -->
 {% block page_script %}
 <script src={{ url_for("static", filename="js/dimension_bar.js") }}></script>
+<script src={{ url_for("static", filename="js/date_filters.js") }}></script>
 <script src={{ url_for("static", filename="js/sensor_data.js") }}></script>
 {% endblock %}
 
@@ -36,9 +37,11 @@
   </div>
 </div>
 
+
 {% endblock %}
 
 <!-- container for the actual visualization here -->
 {% block vis %}
             <div id="sensor_data_chart"></div>
 {% endblock %}
+

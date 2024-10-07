@@ -5,6 +5,7 @@ function onLoad() {
 function drawChart(filters, update) {
     // get the data from the server and filter if necessary
     url = "/api/sensor_data?"
+    console.log(filters)
     if (filters) {
         for (column in filters) {
             url += column + "=" + filters[column] + "&"

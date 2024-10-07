@@ -22,9 +22,13 @@ def get_sensor_data():
     # URL parameters are filters
     where_clause = ""
     if len(request.args) > 0:
+        print(request.args)
         where_clause = "WHERE "
         for column in request.args:
-            where_clause += f"{column} = '{request.args[column]}' AND "
+            if column == "singleDayFilter":
+                where_clause += f"to_char(start_at, 'YYYY-MM-DD') = '{request.args[column]}' AND "
+            else:
+                where_clause += f"{column} = '{request.args[column]}' AND "
         where_clause = where_clause[:-5]
     conn = get_connection()
     cur = conn.cursor()
