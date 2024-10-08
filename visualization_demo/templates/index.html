@@ -1,12 +1,24 @@
-<!doctype html>
-<html lang="en">
-    <header>
-        {% include 'header_includes.html' %}
-    </header>
-    <body>
-        <div class="container">
-            <h1>Visualization Demo</h1>
-            <ul><a href="sensor_data">Sensor Data</a></ul>
-        </div>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+<!-- include the js files needed for this page -->
+{% block page_script %}
+<script src={{ url_for("static", filename="js/dimension_bar.js") }}></script>
+<script src={{ url_for("static", filename="js/date_filters.js") }}></script>
+{% endblock %}
+
+<!-- define the title for this visualizaiton page -->
+{% block vis_title %}
+    <h1><img src={{ url_for("static", filename="images/nanometrics.png") }}> Nanometrics Visualizations</h1>
+{% endblock %}
+
+<!-- this page uses a dimension bar, define it here -->
+{% block dimension_bar %}
+{% endblock %}
+
+<!-- container for the actual visualization here -->
+{% block vis %}
+    <p>
+        Use the side panel to navigate to a visualization.
+    </p>
+{% endblock %}
+
