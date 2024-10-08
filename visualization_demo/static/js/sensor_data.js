@@ -1,5 +1,5 @@
 function onLoad() {
-    drawChart(null, false)
+    drawChart(null, true)
 }
 
 function drawChart(filters, update) {
@@ -45,7 +45,7 @@ function renderChart(data, update) {
     const durations = data.map(row => row[11]);
 
     // if we are updating the page, don't redraw the dimension bar; it takes care of itself
-    if (!update) {
+    if (update === true) {
         // draw a dimension bar
         // dimension bars are a list of drop downs that cascade
         // a selection in the first one filters the next one

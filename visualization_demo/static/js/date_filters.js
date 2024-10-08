@@ -70,3 +70,7 @@ function updateDateFilterText() {
         document.getElementById("dateRangeFilterValue").innerText = "([all])"
     }
 }
+
+function getDateFilters() {
+    return g_dateFilters
+}

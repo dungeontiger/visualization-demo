@@ -54,7 +54,16 @@ function valueChanged(id, dropDowns) {
     // we need to update the chart with new data
     // for each control that is not [all] pass its value as a dictionary
     filters = getDimensionFilters()
-    drawChart(filters, true)
+    date_filters = getDateFilters()
+    if (date_filters) {
+        if (date_filters.singleDayFilter) {
+            if (!filters) {
+                filters = {}
+            }
+            filters['singleDayFilter'] = date_filters.singleDayFilter
+        }
+    }
+    drawChart(filters, false)
 }
 
 function addOptions(select, data) {
