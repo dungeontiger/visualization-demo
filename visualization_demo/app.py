@@ -44,7 +44,8 @@ SELECT
     upper_threshold, 
     direction,
     initial_exceedance > upper_threshold as exceeds_upper,
-    initial_exceedance < lower_threshold as exceeds_lower
+    initial_exceedance < lower_threshold as exceeds_lower,
+    EXTRACT(EPOCH FROM (end_at - start_at)) as duration
 FROM 
     sensor_data
 {where_clause}

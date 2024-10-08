@@ -39,8 +39,10 @@ function renderChart(data, update) {
     const end_at = data.map(row => row[5]);
     const lower_threshold = data.map(row => row[6]);
     const upper_threshold = data.map(row => row[7]);
-    const exceeds_upper = data.map(row => row[8]);
-    const exceeds_lower = data.map(row => row[9]);
+    const direction = data.map(row => row[8]);
+    const exceeds_upper = data.map(row => row[9]);
+    const exceeds_lower = data.map(row => row[10]);
+    const durations = data.map(row => row[11]);
 
     // if we are updating the page, don't redraw the dimension bar; it takes care of itself
     if (!update) {
@@ -67,6 +69,7 @@ function renderChart(data, update) {
     let tracesMap = {} // map of sensor id to it's trace
     let upperLimitTracesMap = {}
     let lowerLimitTracesMap = {}
+    let durationTracesMap = {}
     // go through all the data and split it into traces
     for (let index in data) {
         const row = data[index]
@@ -98,8 +101,17 @@ function renderChart(data, update) {
                     color: "#bf3608"
                 }
             }
+            durationTracesMap[id] = {
+                name: "Event Duration (hours)",
+                x: [],
+                y: [],
+                mode: "lines+markers",
+                xaxis: 'x2',
+                yaxis: 'y2',
+                hovertemplate: "Duration: %{y:.2f} (hr)<br>Start: %{x}<br>Sensor: " + id
+            }
         }
-        // this is the intial exceedance trace
+        // this is the initial exceedance trace
         let trace = tracesMap[id]
         trace.x.push(row[4])
         trace.y.push(row[3])
@@ -112,21 +124,37 @@ function renderChart(data, update) {
         let lower = lowerLimitTracesMap[id]
         lower.x.push(row[4])
         lower.y.push(row[6])
+
+        let duration = durationTracesMap[id]
+        duration.x.push(row[4])
+        duration.y.push(row[11] / 360)
     }
 
     let layout = {
         showlegend: true,
+        width: 1000,
+        height: 800,
         xaxis: {
             type: 'date',
             tickformat: '%Y-%m-%0d' // For more time formatting types, see: https://github.com/d3/d3-time-format/blob/master/README.md
+        },
+        xaxis2: {
+            type: 'date',
+            tickformat: '%Y-%m-%0d' // For more time formatting types, see: https://github.com/d3/d3-time-format/blob/master/README.md
+        },
+        grid: {
+            rows: 2,
+            columns: 1,
+            pattern: 'independent'
         }
     }
     let traces = []
     for (let key in tracesMap) {
         traces.push(tracesMap[key])
+        traces.push(durationTracesMap[key])
     }
-    // only show the upper and lower bounds if there is just one trace
-    if (traces.length == 1) {
+    // only show the upper and lower bounds if there is just one trace (and one for the duration)
+    if (traces.length == 2) {
         traces.push(upperLimitTracesMap[Object.keys(upperLimitTracesMap)[0]])
         traces.push(lowerLimitTracesMap[Object.keys(lowerLimitTracesMap)[0]])
     }
