@@ -2,10 +2,9 @@
 
 <!-- include the js files needed for this page -->
 {% block page_script %}
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 <script src={{ url_for("static", filename="js/dimension_bar.js") }}></script>
 <script src={{ url_for("static", filename="js/date_filters.js") }}></script>
-<script src={{ url_for("static", filename="js/sensor_data.js") }}></script>
+<script src={{ url_for("static", filename="js/sensor_data_python.js") }}></script>
 {% endblock %}
 
 <!-- define the title for this visualizaiton page -->
@@ -43,6 +42,6 @@
 
 <!-- container for the actual visualization here -->
 {% block vis %}
-            <div id="sensor_data_chart"></div>
+    {{ chart_html|safe }}
 {% endblock %}
 

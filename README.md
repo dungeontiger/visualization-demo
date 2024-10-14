@@ -1,5 +1,11 @@
 Visualization Demo
 =
+TODO: 
+- add a python chart
+- add a template visualization
+- add steps to run locally
+- add steps to add a visualization, simple to complex
+- 
 Demo that creates a visualization application. It can easily be expanded to include more visualizations.
 
 Run setup.sh to get the project ready.

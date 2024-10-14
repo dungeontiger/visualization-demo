@@ -5,20 +5,37 @@ from flask import Flask
 from flask import render_template
 from flask import request
 
+from visualization_demo import sensor_data
+
 load_dotenv()
 
 app = Flask(__name__)
 
+# Include page routes here
+
 @app.route("/")
-def index():
+def index_route():
     return render_template('index.html')
 
 @app.route("/sensor_data")
-def sensor_data():
-    return render_template('sensor_data.html', )
+def sensor_data_route():
+    # everything is done client side here via plotly.js
+    return render_template('sensor_data.html')
+
+@app.route("/sensor_data_python")
+def sensor_data_python_route():
+    # the chart is rendered in python via matplotlib and then converted to html
+    html = sensor_data.get_sensor_data_matplotlib()
+    return render_template('sensor_data_python.html', chart_html=html)
+
+@app.route("/blank_template")
+def blank_template_route():
+    return render_template('blank_template.html')
+
+# Include REST APIs here
 
 @app.route("/api/sensor_data")
-def get_sensor_data():
+def get_sensor_data_route():
     # URL parameters are filters
     where_clause = ""
     if len(request.args) > 0:
